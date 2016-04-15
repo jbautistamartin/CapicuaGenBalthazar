@@ -1,0 +1,80 @@
+<%
+#encoding: UTF-8
+
+=begin
+
+CapicuaGen
+
+CapicuaGen es un software que ayuda a la creación automática de
+sistemas empresariales a través de la definición y ensamblado de
+diversos generadores de características.
+
+El proyecto fue iniciado por José Luis Bautista Martin, el 6 de enero
+del 2016.
+
+Puede modificar y distribuir este software, según le plazca, y usarlo
+para cualquier fin ya sea comercial, personal, educativo, o de cualquier
+índole, siempre y cuando incluya este mensaje, y se permita acceso el
+código fuente.
+
+Este software es código libre, y se licencia bajo LGPL.
+
+Para más información consultar http://www.gnu.org/licenses/lgpl.html
+=end
+%>package <%=generation_attributes[:package]%>;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.logging.Level;
+
+import static java.util.logging.Logger.getLogger;
+
+
+public class WebRequest {
+
+    static final int TIMEOUT = <%=generation_attributes[:web_timeout]%>;
+
+    public String getResponseText(String stringUrl) {
+
+
+        StringBuilder response = new StringBuilder();
+        HttpURLConnection httpconn = null;
+
+        try {
+            URL url = new URL(stringUrl);
+            httpconn = (HttpURLConnection) url.openConnection();
+            httpconn.setConnectTimeout(TIMEOUT);
+            httpconn.setReadTimeout(TIMEOUT);
+            if (httpconn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                BufferedReader input = new BufferedReader(new InputStreamReader(httpconn.getInputStream()));
+                String strLine = null;
+                while ((strLine = input.readLine()) != null) {
+                    response.append(strLine);
+                }
+                input.close();
+            }
+        } catch (MalformedURLException ex) {
+            getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (httpconn != null) {
+                try {
+                    httpconn.disconnect();
+                } catch (Exception ex) {
+                    getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        return response.toString();
+
+    }
+
+
+}
+

@@ -1,0 +1,51 @@
+<%
+#encoding: UTF-8
+
+=begin
+
+CapicuaGen
+
+CapicuaGen es un software que ayuda a la creación automática de
+sistemas empresariales a través de la definición y ensamblado de
+diversos generadores de características.
+
+El proyecto fue iniciado por José Luis Bautista Martin, el 6 de enero
+del 2016.
+
+Puede modificar y distribuir este software, según le plazca, y usarlo
+para cualquier fin ya sea comercial, personal, educativo, o de cualquier
+índole, siempre y cuando incluya este mensaje, y se permita acceso el
+código fuente.
+
+Este software es código libre, y se licencia bajo LGPL.
+
+Para más información consultar http://www.gnu.org/licenses/lgpl.html
+=end
+%><RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".MainActivity">
+
+  <android.support.v4.view.ViewPager
+  android:id="@+id/activity_main_pager"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+    <android.support.v4.view.PagerTabStrip
+    android:id="@+id/activity_main_tab"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#2196F3"
+    android:textColor="@android:color/white"
+    android:layout_gravity="top"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    >
+
+    </android.support.v4.view.PagerTabStrip>
+
+  </android.support.v4.view.ViewPager>
+
+</RelativeLayout>
+

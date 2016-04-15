@@ -1,0 +1,71 @@
+<%
+#encoding: UTF-8
+
+=begin
+
+CapicuaGen
+
+CapicuaGen es un software que ayuda a la creación automática de
+sistemas empresariales a través de la definición y ensamblado de
+diversos generadores de características.
+
+El proyecto fue iniciado por José Luis Bautista Martin, el 6 de enero
+del 2016.
+
+Puede modificar y distribuir este software, según le plazca, y usarlo
+para cualquier fin ya sea comercial, personal, educativo, o de cualquier
+índole, siempre y cuando incluya este mensaje, y se permita acceso el
+código fuente.
+
+Este software es código libre, y se licencia bajo LGPL.
+
+Para más información consultar http://www.gnu.org/licenses/lgpl.html
+=end
+%><?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="300dp"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+       <TextView
+            android:id="@+id/cardview_<%=template_target.entity_schema.name%>_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#66000000"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" android:layout_marginBottom="10dp" />
+
+			<%template_target.entity_schema.fields.each do |field|%>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="<%=field.name%>:"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:paddingLeft="5dp" />
+
+        <TextView
+            android:id="@+id/cardview_<%=template_target.entity_schema.name%>_<%=field.name%>"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="<%=field.name%>"
+            android:textColor="@android:color/black"
+            android:padding="10dp" />
+
+			<%end%>
+
+    </LinearLayout>
+
+
+</android.support.v7.widget.CardView>
+

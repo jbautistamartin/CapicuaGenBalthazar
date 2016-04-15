@@ -1,0 +1,123 @@
+<%
+#encoding: UTF-8
+
+=begin
+
+CapicuaGen
+
+CapicuaGen es un software que ayuda a la creación automática de
+sistemas empresariales a través de la definición y ensamblado de
+diversos generadores de características.
+
+El proyecto fue iniciado por José Luis Bautista Martin, el 6 de enero
+del 2016.
+
+Puede modificar y distribuir este software, según le plazca, y usarlo
+para cualquier fin ya sea comercial, personal, educativo, o de cualquier
+índole, siempre y cuando incluya este mensaje, y se permita acceso el
+código fuente.
+
+Este software es código libre, y se licencia bajo LGPL.
+
+Para más información consultar http://www.gnu.org/licenses/lgpl.html
+=end
+%>package <%=generation_attributes[:package]%>;
+
+import android.app.ActionBar;
+import android.app.FragmentTransaction;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+
+import <%=get_r_full_name%>;
+
+public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
+
+
+    SectionPagerAdapter adapter;
+    ViewPager viewPager;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        adapter = new SectionPagerAdapter(getSupportFragmentManager());
+        viewPager = (ViewPager) findViewById(R.id.activity_main_pager);
+        viewPager.setAdapter(adapter);
+    }
+
+    @Override
+    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+        viewPager.setCurrentItem(tab.getPosition());
+    }
+
+    @Override
+    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+
+    }
+
+    @Override
+    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+
+    }
+
+    public class SectionPagerAdapter extends FragmentPagerAdapter {
+        public SectionPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+
+          switch (position) {
+<%
+  entities_count=0
+  get_tables do |e|
+
+%>
+              case <%=entities_count%>:
+                  return "<%=e.name%>";
+<%entities_count+=1
+  end%>
+
+            }
+            return null;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+<%
+  entities_count=0
+  get_tables do |e|
+%>
+                case <%=entities_count%>:
+                    return new <%=get_entity_fragment_full_name(e.name)%>();
+<%entities_count+=1
+  end%>
+
+                default:
+                    return null;
+
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return <%=entities_count%>;
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        return false;
+    }
+
+
+}
+

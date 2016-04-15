@@ -1,0 +1,160 @@
+<%
+#encoding: UTF-8
+
+=begin
+
+CapicuaGen
+
+CapicuaGen es un software que ayuda a la creación automática de
+sistemas empresariales a través de la definición y ensamblado de
+diversos generadores de características.
+
+El proyecto fue iniciado por José Luis Bautista Martin, el 6 de enero
+del 2016.
+
+Puede modificar y distribuir este software, según le plazca, y usarlo
+para cualquier fin ya sea comercial, personal, educativo, o de cualquier
+índole, siempre y cuando incluya este mensaje, y se permita acceso el
+código fuente.
+
+Este software es código libre, y se licencia bajo LGPL.
+
+Para más información consultar http://www.gnu.org/licenses/lgpl.html
+=end
+%>package <%=generation_attributes[:package]%>;
+
+import android.content.Context;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import <%=get_r_full_name%>;
+import <%=get_base_package%>.beans.<%=template_target.entity_schema.name%>;
+import <%=get_base_package%>.tools.WebRequest;
+import com.google.gson.Gson;
+
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.logging.Level;
+
+import static java.util.logging.Logger.getLogger;
+
+
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class <%=template_target.entity_schema.name%>Fragment extends Fragment {
+
+
+    static final String URL = "<%=generation_attributes[:remote_url]%>/<%=template_target.entity_schema.name%>";
+    private <%=template_target.entity_schema.name%>Adapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
+
+    public <%=template_target.entity_schema.name%>Fragment() {
+        // Required empty public constructor
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.recyclerview_<%=template_target.entity_schema.name.downcase%>, container, false);
+        RecyclerView recycler = (RecyclerView) v.findViewById(R.id.recyclerview_<%=template_target.entity_schema.name.downcase%>);
+        recycler.setHasFixedSize(true);
+
+        layoutManager = new LinearLayoutManager(getActivity());
+        recycler.setLayoutManager(layoutManager);
+
+        ArrayList<<%=template_target.entity_schema.name%>> myDataSet = new ArrayList<<%=template_target.entity_schema.name%>>();
+
+        adapter = new <%=template_target.entity_schema.name%>Adapter(getActivity(), myDataSet);
+        recycler.setAdapter(adapter);
+
+        GetJson getJson = new GetJson();
+        getJson.execute();
+
+
+        return v;
+    }
+
+    public class GetJson extends AsyncTask<Void, Void, Void> {
+
+
+        @Override
+        protected Void doInBackground(Void... params) {
+						WebRequest webRequest = new WebRequest();
+            try {
+
+                String reader = webRequest.getResponseText(URL);
+                Gson gson = new Gson();
+                final <%=template_target.entity_schema.name%>[] jsonElements = gson.fromJson(reader, <%=template_target.entity_schema.name%>[].class);
+
+                if (jsonElements != null) {
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.<%=template_target.entity_schema.name%> = new ArrayList(Arrays.asList(jsonElements));
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+                }
+
+            } catch (Exception e) {
+                getLogger(getClass().getName()).log(Level.SEVERE, null, e);
+            }
+            return null;
+        }
+    }
+
+    public class <%=template_target.entity_schema.name%>Adapter extends RecyclerView.Adapter<<%=template_target.entity_schema.name%>Fragment.ViewHolder> {
+
+        public ArrayList<<%=template_target.entity_schema.name%>> <%=template_target.entity_schema.name%>;
+        private Context context;
+
+        public <%=template_target.entity_schema.name%>Adapter(Context context, ArrayList<<%=template_target.entity_schema.name%>> product) {
+            this.context = context;
+            this.<%=template_target.entity_schema.name%> = product;
+        }
+
+        @Override
+        public <%=template_target.entity_schema.name%>Fragment.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cardview_<%=template_target.entity_schema.name.downcase%>, viewGroup, false);
+            ViewHolder vh = new ViewHolder(v);
+            return vh;
+        }
+
+        @Override
+        public void onBindViewHolder(<%=template_target.entity_schema.name%>Fragment.ViewHolder viewHolder, final int position) {
+				<%template_target.entity_schema.fields.each do |field|%>
+						viewHolder.<%=field.name%>.setText("" + <%=template_target.entity_schema.name%>.get(position).get<%=field.name%>());
+				<%end%>
+        }
+
+        @Override
+        public int getItemCount() {
+            return <%=template_target.entity_schema.name%>.size();
+        }
+
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+
+	<%template_target.entity_schema.fields.each do |field|%>
+				public TextView <%=field.name%>;
+	<%end%>
+
+        public ViewHolder(View v) {
+            super(v);
+	<%template_target.entity_schema.fields.each do |field|%>
+						<%=field.name%> = (TextView) v.findViewById(R.id.cardview_<%=template_target.entity_schema.name%>_<%=field.name%>);
+	<%end%>
+        }
+    }
+}
+
