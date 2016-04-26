@@ -73,7 +73,13 @@ module CapicuaGen::Balthazar
     # Genera el codigo de la carateristica
     def generate
       super()
-      generate_configuration
+      begin
+        message_helper.add_indent
+        generate_configuration
+      ensure
+        message_helper.remove_indent
+      end
+
     end
 
 
@@ -83,6 +89,11 @@ module CapicuaGen::Balthazar
       manifest_file= get_manifest_file
 
       return unless manifest_file
+
+      if not File.exist? manifest_file
+        message_helper.puts_file_modified manifest_file, :ignore
+        return
+      end
 
       # Ruta para conseguir el archivo manifiest.xml
 
@@ -119,6 +130,8 @@ module CapicuaGen::Balthazar
 
       # Guardo el resultado
       File.write(manifest_file, formatted_xml)
+
+      message_helper.puts_file_modified manifest_file, :override
 
     end
 
