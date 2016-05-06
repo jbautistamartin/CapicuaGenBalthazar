@@ -26,7 +26,7 @@ que generan un proyecto de Android
 
 require_relative 'version'
 require 'CapicuaGen/capicua_gen'
-require_relative 'AndroidLenguaje/AndroContextProvider/Source/andy_context_provider_feature'
+require_relative 'AndroidLanguage/AndyContextProvider/Source/andy_context_provider_feature'
 require_relative 'Business/AndySqlEntity/Source/andy_sql_entity_feature'
 require_relative 'Entities/AndyEntity/Source/entity_field_schema.rb'
 require_relative 'GUI/AndyEntityCardViewFragment/Source/andy_entity_card_view_fragment_feature'
