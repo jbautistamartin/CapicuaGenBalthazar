@@ -6,12 +6,12 @@ CapicuaGen es un software que ayuda a la creación automática de
 sistemas empresariales a través de la definición y ensamblado de
 diversos generadores de características.
 
-El proyecto fue iniciado por José Luis Bautista Martin, el 6 de enero
-del 2016.
+El proyecto fue iniciado por José Luis Bautista Martín, el 6 de enero
+de 2016.
 
 Puede modificar y distribuir este software, según le plazca, y usarlo
 para cualquier fin ya sea comercial, personal, educativo, o de cualquier
-índole, siempre y cuando incluya este mensaje, y se permita acceso el
+índole, siempre y cuando incluya este mensaje, y se permita acceso al
 código fuente.
 
 Este software es código libre, y se licencia bajo LGPL.
@@ -31,7 +31,7 @@ require_relative '../../../Mixins/java_mixin'
 
 module CapicuaGen::Balthazar
 
-  # Caracteristica generadora para pantalla visualizadora de entidades
+  # Característica generadora para pantalla visualizadora de entidades
   class AndyMainActivityFeature < CapicuaGen::TemplateFeature
     include CapicuaGen
     include CapicuaGen::Balthazar
@@ -39,7 +39,7 @@ module CapicuaGen::Balthazar
 
     public
 
-    # Inicializa la caracteristica
+    # Inicializa la característica
     def initialize(values= {})
       super(values)
 
@@ -58,19 +58,19 @@ module CapicuaGen::Balthazar
       set_template_target("main_activity", TemplateTarget.new(:out_file => get_activity_out_file("activity_main.xml")))
     end
 
-    # Resetea los atributos personalizados de la caracteristica (antes de establecer el generador)
+    # Resetea los atributos personalizados de la característica (antes de establecer el generador)
     def reset_attributes
       self.generation_attributes[:package]        = nil
       self.generation_attributes[:package_out_dir]= nil
     end
 
-    # Configura los atributos personalizados de la caracteristica (antes de establecer el generador)
+    # Configura los atributos personalizados de la característica (antes de establecer el generador)
     def configure_attributes()
       self.generation_attributes[:package]        = "#{self.generation_attributes[:package]}.activities" unless self.generation_attributes.has_in_self?(:package)
       self.generation_attributes[:package_out_dir]= get_package_out_dir
     end
 
-    # Genera el codigo de la carateristica
+    # Genera el código de la carateristica
     def generate
       super()
       begin
